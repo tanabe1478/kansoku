@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kansoku</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">KANSOKU</p>
+        <h1 id="repository-name">Loading…</h1>
+        <p id="revision-summary" class="muted"></p>
+      </div>
+      <div id="load-status" class="status-pill">Loading artifacts</div>
+    </header>
+
+    <main>
+      <section id="summary" class="summary-grid" aria-label="Analysis summary"></section>
+
+      <section class="panel graph-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SYSTEM VIEW</p>
+            <h2>Workspace package dependencies</h2>
+          </div>
+          <p class="muted">Select a package to inspect its modules.</p>
+        </div>
+        <svg id="package-graph" role="img" aria-label="Workspace package dependency graph"></svg>
+      </section>
+
+      <section class="explorer">
+        <aside class="panel package-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">PACKAGES</p>
+              <h2>Boundaries</h2>
+            </div>
+          </div>
+          <div id="package-list" class="list"></div>
+        </aside>
+
+        <section class="panel module-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">MODULES</p>
+              <h2 id="module-heading">Select a package</h2>
+            </div>
+            <input id="module-search" type="search" placeholder="Filter modules" aria-label="Filter modules">
+          </div>
+          <div id="module-list" class="module-list empty-state">Select a package in the graph or sidebar.</div>
+        </section>
+
+        <aside class="panel detail-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">EVIDENCE</p>
+              <h2>Inspection</h2>
+            </div>
+          </div>
+          <div id="detail" class="empty-state">Select a module or finding.</div>
+        </aside>
+      </section>
+
+      <section class="lower-grid">
+        <section class="panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">CHANGES</p>
+              <h2>Structural delta</h2>
+            </div>
+          </div>
+          <div id="changes" class="list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">FINDINGS</p>
+              <h2>Review candidates</h2>
+            </div>
+          </div>
+          <div id="findings" class="list"></div>
+        </section>
+
+        <section class="panel selection-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">HANDOFF</p>
+              <h2>Human selection</h2>
+            </div>
+          </div>
+          <p id="selection-target" class="muted">Select a module or finding to create a handoff.</p>
+          <label for="requested-outcome">Requested outcome</label>
+          <textarea id="requested-outcome" rows="4" placeholder="Describe the outcome, not the implementation steps."></textarea>
+          <button id="save-selection" type="button" disabled>Save selection.json</button>
+          <p id="selection-status" class="muted"></p>
+        </section>
+      </section>
+
+      <section id="source-panel" class="panel source-panel" hidden>
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">SOURCE</p>
+            <h2 id="source-heading"></h2>
+          </div>
+          <button id="close-source" class="secondary" type="button">Close</button>
+        </div>
+        <div id="source-code" class="source-code"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

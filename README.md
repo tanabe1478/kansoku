@@ -5,7 +5,28 @@
 Kansokuは、リポジトリの構造、変更、品質に関する証拠を、人間が段階的に調査できる形へ変換するスタンドアローンツールです。特定のCoding Agent、IDE、CI、ハーネスには依存しません。
 
 > [!NOTE]
-> 現在は設計段階です。以下のCLIと成果物形式は、最初のvertical sliceを実装しながら検証します。
+> 現在はTypeScriptリポジトリ向けvertical sliceです。artifact schemaとCLIは、dogfoodingを通して変更する可能性があります。
+
+## Quick start
+
+Node.js 22以降が必要です。
+
+```bash
+npm install --ignore-scripts
+
+# Gitの一つ前のcommitと現在のworking treeを比較する
+node ./bin/kansoku.js scan ../pi --base HEAD~1 \
+  --output .kansoku/runs/pi
+
+# ローカルUIを起動する
+node ./bin/kansoku.js serve .kansoku/runs/pi
+```
+
+表示された`http://127.0.0.1:4173`を開くと、package graphからmodule、依存関係、ソース位置まで辿れます。UIで保存した選択は次のコマンドで機械可読なJSONとして取得できます。
+
+```bash
+node ./bin/kansoku.js export .kansoku/runs/pi
+```
 
 ## なぜ作るのか
 
@@ -62,17 +83,18 @@ Repository + external evidence
        Human    Agent harness / CI / IDE
 ```
 
-## 最初のMVP
+## 現在のvertical slice
 
-最初のvertical sliceでは、対象言語を一つに絞って次を一続きで実現します。
+TypeScriptを最初の対象言語として、次を一続きで実装しています。
 
 1. Git revisionとworking treeを入力として受け取る
-2. モジュールと依存関係を抽出する
-3. 変更されたノード・エッジを前後比較する
-4. ローカルUIで構造からソース位置まで辿る
-5. 選択した問題、対象path、根拠をJSONとして出力する
+2. TypeScript compiler APIでmoduleと依存関係を抽出する
+3. `tsconfig.json`のpath aliasとworkspace package importを解決する
+4. 変更されたmodule・edgeと、逆依存による影響候補を比較する
+5. ローカルUIでpackage graphからmodule、依存関係、ソース位置まで辿る
+6. 選択した問題、対象path、根拠、期待する結果をJSONとして出力する
 
-テスト結果やmutation testingなどの取り込みは、この基本ループを確認した後に追加します。
+テスト結果やmutation testingなどの取り込みは、この基本ループをdogfoodingした後に追加します。現在分かっている制約は[`docs/dogfooding-pi.md`](docs/dogfooding-pi.md)に記録しています。
 
 ## CLI案
 
@@ -98,10 +120,11 @@ kansoku export .kansoku/runs/latest --selection current
 ├── changes.json    # baseとtargetの構造差分
 ├── findings.json   # 規則違反や調査候補
 ├── evidence.json   # findingや構造判断の根拠
-└── selection.json  # 人間が選択した対象と依頼内容
+├── selection.json  # 人間が選択した対象と依頼内容
+└── local.json      # UI用の端末ローカル情報。portable artifactには含めない
 ```
 
-成果物ではプロジェクトルートからの相対pathを使用し、schema versionと解析器のversionを記録します。詳細は[`docs/architecture.md`](docs/architecture.md)を参照してください。
+成果物ではプロジェクトルートからの相対pathを使用し、schema versionと解析器のversionを記録します。`local.json`だけはsource表示のためrepositoryの絶対pathを持ち、core artifactから分離されています。詳細は[`docs/architecture.md`](docs/architecture.md)を参照してください。
 
 ## yorishiroとの関係
 

@@ -157,7 +157,7 @@ SelectionはAgent用promptそのものではありません。yorishiro、他の
 - analyzerの名前とversion
 - sourceまたはevidenceへの追跡可能性
 
-時刻やローカルの絶対pathなど、同じ入力からの再現性を損なう情報はcore artifactから分離します。
+時刻やローカルの絶対pathなど、同じ入力からの再現性を損なう情報はcore artifactから分離します。現在はローカルUIがsourceを読むためのrepository rootと生成時刻だけを`local.json`へ保存しています。
 
 schema変更は明示的にversioningします。UIは解析プロセスのメモリ状態ではなく、保存されたartifactだけから同じ表示を再構築できるようにします。
 
@@ -203,13 +203,20 @@ schema変更は明示的にversioningします。UIは解析プロセスのメ�
 
 基本ループを検証した後、test、coverage、mutation、architecture policyなどを個別adapterとして追加します。
 
+## Vertical sliceで決定したこと
+
+- Node.js 22以降で動作するスタンドアローンCLIとする
+- 最初の解析対象をTypeScriptとする
+- 正規表現ではなくTypeScript compiler APIからmodule referenceを抽出する
+- UIは保存済みJSON artifactを読むlocalhost限定のWeb UIとする
+- 依存追加を抑えるため、最初のUIはframeworkを使用しない
+
 ## 未決定事項
 
-vertical spikeまで、以下は意図的に未決定とします。
+以下はdogfoodingの結果を見て決定します。
 
-- 実装言語と配布形式
-- 最初に対応する解析対象言語
-- parser、compiler API、language serverのどれを利用するか
-- graph layoutとUI framework
+- npm packageやsingle executableなどの配布形式
+- compiler optionをpackage単位で解決する方法
 - editorへsource jumpするためのprotocol
 - 大規模repository向けの保存・incremental analysis方式
+- test、coverage、mutation、runtime traceのevidence adapter形式

@@ -1,0 +1,20 @@
+{
+  "name": "kansoku",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Architecture observability for agent-built software",
+  "type": "module",
+  "bin": {
+    "kansoku": "./bin/kansoku.js"
+  },
+  "scripts": {
+    "check": "node --check bin/kansoku.js && node --check src/cli.js && node --check src/git.js && node --check src/scan.js && node --check src/server.js && node --check src/typescript-analyzer.js && node --check src/ui/app.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "typescript": "5.9.3"
+  }
+}
